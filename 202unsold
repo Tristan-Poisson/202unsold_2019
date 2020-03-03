@@ -9,6 +9,8 @@
 import sys
 import math
 
+iter_diag = lambda x: [[x[z - m][m] for m in range(z + 1) if m < len(x) and z - m < len(x)] for z in range(len(x) * 2 - 1)]
+
 def check_for_err():
     halp = open("help", "r")
 
@@ -30,6 +32,21 @@ def check_for_err():
             sys.exit(84)
     return flag
 
+def display(tab_xy, tab_z):
+    sepa = "--------------------------------------------------------------------------------"
+    print(sepa)
+    print("\tX=10\tX=20\tX=30\tX=40\tX=50\tY law")
+    for i in range(len(tab_xy)):
+        if i == len(tab_xy) - 1:
+            print("X law\t{:.3f}\t{:.3f}\t{:.3f}\t{:.3f}\t{:.3f}\t{:.3f}".format(*tab_xy[i]))
+        else:
+            print("Y={}\t{:.3f}\t{:.3f}\t{:.3f}\t{:.3f}\t{:.3f}\t{:.3f}".format((i + 1)*10, *tab_xy[i]))
+    print(sepa)
+    print("z\t20\t30\t40\t50\t60\t70\t80\t90\t100")
+    print("p(Z=z)\t{:.3f}\t{:.3f}\t{:.3f}\t{:.3f}\t{:.3f}\t{:.3f}\t{:.3f}\t{:.3f}\t{:.3f}".format(*tab_z))
+    print(sepa)
+    return 0
+
 def law_xy(val):
     tab = [6 * [0] for i in  range(6)]
 
@@ -42,22 +59,24 @@ def law_xy(val):
     for i in range(len(tab[0])):
         for j in range(len(tab) - 1):
             tab[5][i] += tab[j][i]
-    for i in range(len(tab)):
-        for j in range(len(tab[i])):
-            tab[i][j] = round(tab[i][j], 3)
     return tab
 
-def law_z():
+def law_z(tab_xy):
+    tab_xy.pop()
+    tab = []
+    tab_tmp = iter_diag(tab_xy)
+    for i in range(len(tab_tmp)):
+        tab.append(sum(tab_tmp[i]))
     return tab
 
 def calc(val):
     tab_xy = law_xy(val)
-    print(tab_xy)
+    tab_z = law_z(tab_xy)
+    display(tab_xy, tab_z)
     return 0
 
 def main():
     x = check_for_err()
-    print(x)
     calc(x)
 
 if __name__ == "__main__":
