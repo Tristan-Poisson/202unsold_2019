@@ -62,9 +62,12 @@ def law_xy(val):
     return tab
 
 def law_z(tab_xy):
-    tab_xy.pop()
+    tab_xy_tmp = []
+    for i in range(len(tab_xy)):
+        tab_xy_tmp.append(tab_xy[i])
+    tab_xy_tmp.pop()
     tab = []
-    tab_tmp = iter_diag(tab_xy)
+    tab_tmp = iter_diag(tab_xy_tmp)
     for i in range(len(tab_tmp)):
         tab.append(sum(tab_tmp[i]))
     return tab
