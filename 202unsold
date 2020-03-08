@@ -49,8 +49,8 @@ def display(tab_xy, tab_z, dict_espva):
     print(sepa)
     x = ord("X")
     for i in range(3):
-        print("expected value of ", chr(x + i), ":\t{:.1f}".format(dict_espva["esp_" + chr(x + 32 + i)]))
-        print("variance of ", chr(x + i), ":\t{:.1f}".format(dict_espva["va_" + chr(x + 32 + i)]))
+        print("expected value of ", chr(x + i), ":\t{:.1f}".format(dict_espva["esp_" + chr(x + 32 + i)]), sep="")
+        print("variance of ", chr(x + i), ":\t\t{:.1f}".format(dict_espva["va_" + chr(x + 32 + i)]), sep="")
     print(sepa)
     return 0
 
