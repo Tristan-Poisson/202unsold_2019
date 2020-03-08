@@ -10,6 +10,8 @@ import sys
 import math
 
 iter_diag = lambda x: [[x[z - m][m] for m in range(z + 1) if m < len(x) and z - m < len(x)] for z in range(len(x) * 2 - 1)]
+esperance = lambda x, start=0, pow=1: 10 * sum((i + start) ** pow * sum(x[i]) for i in range(len(x)))
+variance = lambda x, start=0: 10 * esperance(x, start, 2) - esperance(x, start) ** 2
 
 def check_for_err():
     halp = open("help", "r")
@@ -72,9 +74,25 @@ def law_z(tab_xy):
         tab.append(sum(tab_tmp[i]))
     return tab
 
+def calc_esp_var(tab_xy, tab_z):
+    tab_xy_tmp = []
+    for i in range(len(tab_xy)):
+        tab_xy_tmp.append(tab_xy[i])
+    tab_xy_tmp.pop()
+    for i in range(len(tab_xy_tmp)):
+        tab_xy_tmp[i].pop
+    dict_espva = {
+        "esp_x" : esperance(tab_xy_tmp, 1), "va_x" : variance(tab_xy_tmp, 1),
+        "esp_y" : esperance(list(zip(*tab_xy_tmp)), 1), "va_y" : variance(list(zip(*tab_xy_tmp)), 1),
+        #"esp_z" : esperance(tab_z, 2), "va_z" : variance(tab_z, 2)
+    }
+    print(dict_espva)
+    return dict_espva
+
 def calc(val):
     tab_xy = law_xy(val)
     tab_z = law_z(tab_xy)
+    dict_espva = calc_esp_var(tab_xy, tab_z)
     display(tab_xy, tab_z)
     return 0
 
