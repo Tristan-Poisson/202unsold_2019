@@ -34,7 +34,7 @@ def check_for_err():
             sys.exit(84)
     return flag
 
-def display(tab_xy, tab_z):
+def display(tab_xy, tab_z, dict_espva):
     sepa = "--------------------------------------------------------------------------------"
     print(sepa)
     print("\tX=10\tX=20\tX=30\tX=40\tX=50\tY law")
@@ -46,6 +46,11 @@ def display(tab_xy, tab_z):
     print(sepa)
     print("z\t20\t30\t40\t50\t60\t70\t80\t90\t100")
     print("p(Z=z)\t{:.3f}\t{:.3f}\t{:.3f}\t{:.3f}\t{:.3f}\t{:.3f}\t{:.3f}\t{:.3f}\t{:.3f}".format(*tab_z))
+    print(sepa)
+    x = ord("X")
+    for i in range(3):
+        print("expected value of ", chr(x + i), ":\t{:.1f}".format(dict_espva["esp_" + chr(x + 32 + i)]))
+        print("variance of ", chr(x + i), ":\t{:.1f}".format(dict_espva["va_" + chr(x + 32 + i)]))
     print(sepa)
     return 0
 
@@ -65,35 +70,32 @@ def law_xy(val):
 
 def law_z(tab_xy):
     tab_xy_tmp = []
-    for i in range(len(tab_xy)):
+    for i in range(len(tab_xy)-1):
         tab_xy_tmp.append(tab_xy[i])
-    tab_xy_tmp.pop()
     tab = []
     tab_tmp = iter_diag(tab_xy_tmp)
     for i in range(len(tab_tmp)):
         tab.append(sum(tab_tmp[i]))
-    return tab
+    return tab, tab_tmp
 
 def calc_esp_var(tab_xy, tab_z):
     tab_xy_tmp = []
-    for i in range(len(tab_xy)):
-        tab_xy_tmp.append(tab_xy[i])
-    tab_xy_tmp.pop()
-    for i in range(len(tab_xy_tmp)):
-        tab_xy_tmp[i].pop
+    for i in range(len(tab_xy) - 1):
+        tab_xy_tmp.append([])
+        for j in range(len(tab_xy[i]) - 1):
+            tab_xy_tmp[i].append(tab_xy[i][j])
     dict_espva = {
-        "esp_x" : esperance(tab_xy_tmp, 1), "va_x" : variance(tab_xy_tmp, 1),
-        "esp_y" : esperance(list(zip(*tab_xy_tmp)), 1), "va_y" : variance(list(zip(*tab_xy_tmp)), 1),
-        #"esp_z" : esperance(tab_z, 2), "va_z" : variance(tab_z, 2)
+        "esp_x" : esperance(list(zip(*tab_xy_tmp)), 1), "va_x" : variance(list(zip(*tab_xy_tmp)), 1),
+        "esp_y" : esperance(tab_xy_tmp, 1), "va_y" : variance(tab_xy_tmp, 1),
+        "esp_z" : esperance(tab_z, 2), "va_z" : variance(tab_z, 2)
     }
-    print(dict_espva)
     return dict_espva
 
 def calc(val):
     tab_xy = law_xy(val)
-    tab_z = law_z(tab_xy)
-    dict_espva = calc_esp_var(tab_xy, tab_z)
-    display(tab_xy, tab_z)
+    tab_z, tab_z_tmp = law_z(tab_xy)
+    dict_espva = calc_esp_var(tab_xy, tab_z_tmp)
+    display(tab_xy, tab_z, dict_espva)
     return 0
 
 def main():
